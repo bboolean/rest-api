@@ -1,0 +1,13 @@
+(ns rest-api.routes.read
+  (:import org.bson.types.ObjectId)
+  (:require
+   [monger.collection :as mc]))
+
+(defn read [db]
+  "test"
+  ;; (mc/aggregate db
+  ;;               "books"
+  ;;               [{:$match {};; (body :query)
+  ;;                 }]
+  ;;               :cursor {:batch-size 0})
+  )

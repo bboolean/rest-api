@@ -1,0 +1,64 @@
+(ns rest-api.core
+  (:gen-class)
+  (:require
+   [clojure.java.io :as io]
+   [clojure.data.json :as json]
+   [org.httpkit.server :refer [run-server]]
+   [monger.core :as mg]
+   [monger.collection :as mc]
+   [monger.conversion :refer [from-db-object]]
+   ;; [prompt.routes.routes :refer [routes]]
+   [rest-api.routes.read]
+   ))
+
+(def conn (mg/connect))
+
+(def db (mg/get-db conn "local"))
+
+(def coll "documents")
+
+(mc/aggregate db
+                "books"
+                [{:$match {};; (body :query)
+                  }]
+                :cursor {:batch-size 0})
+
+(defn routes2 [& {:keys [db method uri body]}]
+  (apply
+   (case method
+     :post rest-api.routes.read/read
+     :delete rest-api.routes.read/read
+     :get rest-api.routes.read/read
+     :put rest-api.routes.read/read
+     (fn [db] "oops"))
+   db)
+  "132")
+
+(defn _routes [& {:keys [routes-dep db-dep db uri body]}]
+  (case uri
+    "/books/read" ((routes-dep :read) db body)
+    "/books/create" ((routes-dep :create) db body)
+    "ERROR: no match"))
+
+(defn app [req]
+  (println (str "### " (req :request-method) " " (req :uri)))
+  (let [body (json/read-str
+              (slurp (req :body))
+              :key-fn keyword)]
+    {:status  200
+     :headers {"Content-Type" "text/html"}
+     :body (identity (routes2
+                            :db db
+                            :method (req :request-method)
+                            :uri (req :uri)
+                            :body body))}))
+
+(defonce server (atom nil))
+
+(defn stop-server []
+  (when-not (nil? @server)
+    (@server :timeout 100)
+    (reset! server nil)))
+
+(defn -main [& args]
+  (reset! server (run-server #'app {:port 8080})))

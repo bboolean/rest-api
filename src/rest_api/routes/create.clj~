@@ -1,0 +1,7 @@
+(ns prompt.routes.create
+  (:import org.bson.types.ObjectId)
+  (:require
+   [monger.collection :as mc]))
+
+(defn create [db body]
+  (mc/insert db "books" body))
