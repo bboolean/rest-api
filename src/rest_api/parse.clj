@@ -1,5 +1,4 @@
 (ns rest-api.parse
-  (:gen-class)
   (:require
    [clojure.data.json :as json]))
 

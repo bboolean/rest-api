@@ -16,6 +16,6 @@
     (map
      (fn [item] (assoc item :_id (str (item :_id))))
      (find-fn db uri))
-  (catch Exception e
-    (println (str "    " (.getMessage e)))
-    (str "There was an error. Printing it out to the log."))))
+    (catch Exception e
+      (println (str "    " (.getMessage e)))
+      (str "There was an error. Printing it out to the log."))))

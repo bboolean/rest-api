@@ -7,7 +7,7 @@
   (try
     (do
       (mc/remove-by-id db "books" (ObjectId. (second uri)))
-      {:deleted true})
+      {:delete true})
     (catch Exception e
       (println (str "    " (.getMessage e)))
       (str "There was an error. Printing it out to the log."))))
