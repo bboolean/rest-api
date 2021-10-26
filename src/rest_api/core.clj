@@ -7,6 +7,7 @@
    [monger.core :as mg]
    [monger.collection :as mc]
    [monger.conversion :refer [from-db-object]]
+   [rest-api.parse :as parse]
    [rest-api.routes.create]
    [rest-api.routes.read]
    [rest-api.routes.update]
@@ -26,21 +27,6 @@
     :put (rest-api.routes.update/update db body uri)
     "Route not found"))
 
-(defn remove-first-last-slash [uri]
-  (-> uri
-      (clojure.string/replace #"^/" "")
-      (clojure.string/replace #"/$" "")))
-
-(defn parse-uri [uri]
-  (clojure.string/split
-   (remove-first-last-slash uri)
-   #"/"))
-
-(defn parse-body [body]
-  (if body
-    (json/read-str (slurp body) :key-fn keyword)
-    ""))
-
 (defn app [req]
   (println (str "### " (req :request-method) " " (req :uri)))
   {:status  200
@@ -48,8 +34,8 @@
    :body (json/write-str (routes
                           :db db
                           :method (req :request-method)
-                          :uri (parse-uri (req :uri))
-                          :body (parse-body (req :body))))})
+                          :uri (parse/parse-uri (req :uri))
+                          :body (parse/parse-body (req :body))))})
 
 (defonce server (atom nil))
 
