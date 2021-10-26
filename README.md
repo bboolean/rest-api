@@ -1,29 +1,46 @@
 # rest-api
 
-FIXME: description
+A super simple MongoDB REST API example that is JSON-based even though EDN might be better.
 
-## Installation
+## Prerequisites
 
-Download from http://example.com/FIXME.
+Please set up a local MongoDB server.
 
-## Usage
+## Run
 
-FIXME: explanation
+```
+$ lein run
+```
 
-    $ java -jar rest-api-0.1.0-standalone.jar [args]
+## Curl server
 
-## Options
+Read many
+```
+$ curl -X GET -H "Content-Type:application/json" http://localhost:8080/books
+```
 
-FIXME: listing of options this app accepts.
+Read one
+```
+$ curl -X GET -H "Content-Type:application/json" http://localhost:8080/books/09e7a9023893b239823c8e8d
+```
 
-## Examples
+Create
+```
+$ curl -X POST -H "Content-Type:application/json" --data "{\"title\":\"The Joyful Tree Stump\", \"year\": 2005, \"rating\": 3}" http://localhost:8080/books
+```
 
-...
+Update
+```
+$ curl -X PUT -H "Content-Type:application/json" --data "{\"title\":\"The Joyful Tree Stump\", \"year\": 2005, \"rating\": 5}" http://localhost:8080/books/09e7a9023893b239823c8e8d
+```
 
-### Bugs
+Delete
+```
+$ curl -X DELETE -H "Content-Type:application/json" http://localhost:8080/books/09e7a9023893b239823c8e8d
+```
 
-...
+## Tests
 
-### Any Other Sections
-### That You Think
-### Might be Useful
+```
+$ lein test
+```
