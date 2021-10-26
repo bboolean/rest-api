@@ -12,4 +12,7 @@
        (ObjectId. (second uri))
        body)
       {:updated true})
-    {:error 1}))
+    (catch Exception e
+      (println (str "    " (.getMessage e)))
+      (str "There was an error. Printing it out to the log."))))
+

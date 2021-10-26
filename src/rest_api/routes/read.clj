@@ -3,15 +3,19 @@
   (:require
    [monger.collection :as mc]))
 
-(defn aggregate [db]
-  (mc/aggregate db
+(defn find-fn [db uri]
+  (mc/find-maps db
                 "books"
-                [{:$match {}}]
-                :cursor {:batch-size 0}))
+                (if
+                 (second uri)
+                  {:_id (ObjectId. (second uri))}
+                  {})))
 
-(defn read [db body uri]
-  (map
-   (fn [item] (assoc item :_id (str (item :_id))))
-   (aggregate db)))
-
-
+(defn read [db _ uri]
+  (try
+    (map
+     (fn [item] (assoc item :_id (str (item :_id))))
+     (find-fn db uri))
+  (catch Exception e
+    (println (str "    " (.getMessage e)))
+    (str "There was an error. Printing it out to the log."))))

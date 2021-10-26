@@ -3,9 +3,12 @@
   (:require
    [monger.collection :as mc]))
 
- (defn delete [db body uri]
+(defn delete [db body uri]
   (try
     (do
       (mc/remove-by-id db "books" (ObjectId. (second uri)))
       {:deleted true})
-    {:error 1})) 
+    (catch Exception e
+      (println (str "    " (.getMessage e)))
+      (str "There was an error. Printing it out to the log."))))
+
